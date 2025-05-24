@@ -1,0 +1,6 @@
+,Age,Age,Purchase_Amount,Purchase_Amount,Frequency_of_Purchase,Frequency_of_Purchase,Product_Rating,Product_Rating,Customer_Satisfaction,Customer_Satisfaction
+,mean,std,mean,std,mean,std,mean,std,mean,std
+Cluster,,,,,,,,,,
+0,39.24,6.69,271.47,132.92,6.15,3.04,3.35,1.38,2.7,1.46
+1,40.5,6.23,257.31,128.33,6.63,3.12,2.82,1.43,7.98,1.53
+2,24.57,4.22,293.79,131.02,7.91,3.02,2.94,1.45,5.48,2.56

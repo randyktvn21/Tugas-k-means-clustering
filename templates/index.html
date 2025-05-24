@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Segmentation Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --dark-bg: #0f172a;
+            --darker-bg: #020617;
+            --card-bg: #1e293b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --gradient-start: #3b82f6;
+            --gradient-end: #2563eb;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            padding: 2rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .header h1 {
+            color: var(--text-primary);
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .section-box {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+        }
+
+        .section-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-box h4 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-group-item {
+            background-color: var(--darker-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+            border-radius: 12px !important;
+            transition: all 0.3s ease;
+            padding: 1rem;
+        }
+
+        .list-group-item:hover {
+            background-color: var(--card-bg);
+            transform: translateX(5px);
+            border-color: var(--accent-color);
+        }
+
+        .feature-icon {
+            color: var(--accent-color);
+            margin-right: 10px;
+            width: 24px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            background-color: var(--darker-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background-color: var(--darker-bg);
+            border-color: var(--accent-color);
+            color: var(--text-primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+
+        .form-label {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--accent-hover), var(--gradient-end));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .alert-info {
+            background-color: rgba(59, 130, 246, 0.1);
+            border: 2px solid var(--accent-color);
+            color: var(--text-primary);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .img-fluid {
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .img-fluid:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h5 {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .text-muted {
+            color: var(--text-secondary) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header text-center">
+        <div class="container">
+            <h1><i class="fas fa-chart-pie me-2"></i>Customer Segmentation Analysis</h1>
+            <p class="lead">Analisis segmentasi pelanggan menggunakan algoritma K-Means Clustering</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-chart-pie feature-icon"></i>
+            Segmentasi Pelanggan E-commerce
+        </h1>
+
+        <!-- Deskripsi Aplikasi -->
+        <div class="section-box">
+            <h4><span class="step-number">1</span>Deskripsi Aplikasi</h4>
+            <p class="mb-4">
+                Aplikasi ini menggunakan algoritma K-Means Clustering untuk melakukan segmentasi pelanggan
+                E-commerce berdasarkan karakteristik berikut:
+            </p>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <i class="fas fa-user feature-icon"></i>
+                            <strong>Usia (Age):</strong>
+                            <span class="text-muted">Usia pelanggan dalam tahun</span>
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-shopping-cart feature-icon"></i>
+                            <strong>Jumlah Pembelian (Purchase Amount):</strong>
+                            <span class="text-muted">Total nilai transaksi dalam Dollar ($)</span>
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-clock feature-icon"></i>
+                            <strong>Frekuensi Pembelian:</strong>
+                            <span class="text-muted">Jumlah transaksi per bulan</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <i class="fas fa-star feature-icon"></i>
+                            <strong>Rating Produk:</strong>
+                            <span class="text-muted">Penilaian produk (skala 1-5)</span>
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-smile feature-icon"></i>
+                            <strong>Kepuasan Pelanggan:</strong>
+                            <span class="text-muted">Tingkat kepuasan (skala 1-5)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Data Pelanggan -->
+        <div class="section-box">
+            <h4><span class="step-number">2</span>Input Data Pelanggan</h4>
+            <div class="input-section">
+                <form action="{{ url_for('predict_cluster') }}" method="post" id="customerForm">
+                    <div class="mb-4">
+                        <label for="age" class="form-label">
+                            <i class="fas fa-user feature-icon"></i>Usia
+                        </label>
+                        <input type="number" class="form-control" id="age" name="age" required min="1" max="100"
+                            placeholder="Contoh: 25">
+                        <div class="form-text">Masukkan usia pelanggan (1-100 tahun)</div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="purchase_amount" class="form-label">
+                            <i class="fas fa-shopping-cart feature-icon"></i>Jumlah Pembelian ($)
+                        </label>
+                        <input type="number" class="form-control" id="purchase_amount" name="purchase_amount" required
+                            min="0" placeholder="Contoh: 100">
+                        <div class="form-text">Total nilai pembelian dalam Dollar ($)</div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="frequency" class="form-label">
+                            <i class="fas fa-clock feature-icon"></i>Frekuensi Pembelian (per bulan)
+                        </label>
+                        <input type="number" class="form-control" id="frequency" name="frequency" required min="0"
+                            max="31" placeholder="Contoh: 5">
+                        <div class="form-text">Jumlah transaksi dalam satu bulan</div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="rating" class="form-label">
+                            <i class="fas fa-star feature-icon"></i>Rating Produk (1-5)
+                        </label>
+                        <input type="number" class="form-control" id="rating" name="rating" required min="1" max="5"
+                            step="0.1" placeholder="Contoh: 4.5">
+                        <div class="form-text">Penilaian produk (1: Sangat Buruk, 5: Sangat Baik)</div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="satisfaction" class="form-label">
+                            <i class="fas fa-smile feature-icon"></i>Kepuasan Pelanggan (1-5)
+                        </label>
+                        <input type="number" class="form-control" id="satisfaction" name="satisfaction" required min="1"
+                            max="5" step="0.1" placeholder="Contoh: 4.0">
+                        <div class="form-text">Tingkat kepuasan pelanggan (1: Sangat Tidak Puas, 5: Sangat Puas)</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-chart-line me-2"></i>Prediksi Cluster
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        {% if prediction_result %}
+        <div class="section-box">
+            <h4><span class="step-number">3</span>Hasil Prediksi</h4>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                {{ prediction_result }}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if show_visualizations %}
+        <div class="section-box">
+            <h4><i class="fas fa-chart-bar me-2"></i>Visualisasi Hasil Analisis</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="text-center mb-3">
+                        <i class="fas fa-chart-line me-2"></i>Metode Elbow
+                    </h5>
+                    <img src="{{ url_for('static', filename='elbow_plot.png') }}" class="img-fluid mb-3"
+                        alt="Elbow Method Plot">
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-center mb-3">
+                        <i class="fas fa-chart-pie me-2"></i>Hasil Clustering
+                    </h5>
+                    <img src="{{ url_for('static', filename='clustering_result.png') }}" class="img-fluid mb-3"
+                        alt="Clustering Result">
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
